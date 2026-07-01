@@ -17,6 +17,17 @@ Status: issue 1 implemented
 - [x] Add pre-commit hooks
 - [x] Add internal-data guard
 
+## Milestone 1.5: Database Foundation
+
+Status: issue 3 implemented
+
+- [x] Add SQLAlchemy models: Repository, IngestionJob, User, QueryLog
+- [x] Add async database session factory
+- [x] Add SQLite default database URL
+- [x] Add Postgres-ready database URL switching
+- [x] Add Alembic migration environment
+- [x] Add initial schema migration
+
 ## Milestone 2: Repository Understanding
 
 Status: started

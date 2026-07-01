@@ -4,6 +4,8 @@ services:
       context: .
     env_file:
       - .env.example
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:///./data/reporag.db
     ports:
       - "8000:8000"
     depends_on:

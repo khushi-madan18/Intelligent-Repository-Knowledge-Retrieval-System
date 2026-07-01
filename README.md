@@ -69,6 +69,21 @@ pre-commit run --all-files
 The hooks check trailing whitespace, end-of-file newlines, Ruff, Black,
 ASCII-only content, and accidental commits of files under `_internal/`.
 
+## Database
+
+SQLite is the default development database:
+
+```bash
+alembic upgrade head
+python -c "from src.reporag.db.session import get_db; print('DB OK')"
+```
+
+Switch to Postgres by setting `DATABASE_URL`, without changing application code:
+
+```bash
+export DATABASE_URL="postgresql+asyncpg://reporag:reporag@localhost:5432/reporag"
+```
+
 ## Roadmap
 
 1. Repo scaffold, tests, config
