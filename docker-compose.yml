@@ -1,0 +1,59 @@
+services:
+  api:
+    build:
+      context: .
+    env_file:
+      - .env.example
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_started
+      qdrant:
+        condition: service_started
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./examples:/app/examples
+    command: uvicorn src.reporag.api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/change-me
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    ports:
+      - "16333:6333"
+      - "16334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: reporag
+      POSTGRES_USER: reporag
+      POSTGRES_PASSWORD: reporag
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reporag -d reporag"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  neo4j_data:
+  qdrant_data:
+  postgres_data:

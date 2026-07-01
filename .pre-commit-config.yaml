@@ -1,0 +1,42 @@
+repos:
+  - repo: local
+    hooks:
+      - id: trailing-whitespace
+        name: trailing-whitespace
+        entry: bash scripts/trailing_whitespace_guard.sh
+        language: system
+        types: [text]
+
+      - id: end-of-file-fixer
+        name: end-of-file-fixer
+        entry: bash scripts/end_of_file_fixer.sh
+        language: system
+        types: [text]
+
+      - id: ruff
+        name: ruff
+        entry: ruff check
+        language: python
+        additional_dependencies: ["ruff>=0.8"]
+        types: [python]
+
+      - id: black
+        name: black
+        entry: black --check
+        language: python
+        additional_dependencies: ["black>=24.0"]
+        types: [python]
+
+      - id: ascii-only
+        name: ASCII-only check
+        entry: bash scripts/ascii_guard.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: internal-data-guard
+        name: internal-data path guard
+        entry: bash scripts/internal_data_guard.sh
+        language: system
+        pass_filenames: false
+        always_run: true
