@@ -6,14 +6,17 @@ code context, and eventually answer questions with file and line citations.
 
 ## Current Scope
 
-Issue 1 and the first part of repository ingestion are started:
+Project foundation and the first part of repository ingestion are started:
 
-- GitHub Actions CI workflow for PRs/pushes to `dev`
+- GitHub Actions CI workflow for PRs/pushes to `main`
 - ASCII guard, Ruff, Black, and pytest checks
 - Dockerfile for the API server
 - Docker Compose stack with API, Neo4j, Qdrant, and PostgreSQL
 - Python package scaffold
+- Git repository cloning from HTTPS URLs or local paths
+- Branch selection and shallow clone support
 - Repository file discovery
+- Tree-sitter Python parsing with partial ASTs for syntax errors
 - Python AST parsing
 - Symbol extraction for functions, classes, methods, and imports
 - AST-aware chunks that keep functions/classes together
@@ -83,6 +86,28 @@ Switch to Postgres by setting `DATABASE_URL`, without changing application code:
 ```bash
 export DATABASE_URL="postgresql+asyncpg://reporag:reporag@localhost:5432/reporag"
 ```
+
+## Repository Cloning
+
+Clone and discover parseable files:
+
+```bash
+python -c "from src.reporag.ingestion.cloner import RepoCloner; cloner = RepoCloner(); manifest = cloner.clone_and_discover('https://github.com/pallets/click', branch='main'); print(f'Found {len(manifest)} files')"
+```
+
+Discovery returns entries with `file_path`, `language`, and `size_bytes`.
+Supported file extensions can be customized through `RepoCloner(extensions={...})`.
+
+## AST Parsing
+
+Parse Python source with Tree-sitter:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; parser = ASTParser(); tree = parser.parse('def hello():\n    return 42\n', language='python'); print(tree.root_node.children)"
+```
+
+Parser results include `type`, `text`, `start_line`, `end_line`, columns,
+error state, and child nodes for each AST node.
 
 ## Roadmap
 

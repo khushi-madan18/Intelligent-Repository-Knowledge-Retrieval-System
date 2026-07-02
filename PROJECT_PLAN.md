@@ -11,7 +11,7 @@ Status: issue 1 implemented
 - [x] Add Dockerfile for API server
 - [x] Add docker-compose services: api, neo4j, qdrant, postgres
 - [x] Add `.env.example`
-- [x] Add CI workflow for push/PR to dev
+- [x] Add CI workflow for push/PR to main
 - [x] Add ASCII guard
 - [x] Add formatting and linting setup
 - [x] Add pre-commit hooks
@@ -33,10 +33,15 @@ Status: issue 3 implemented
 Status: started
 
 - [x] Discover local repository files
+- [x] Add remote Git clone support
+- [x] Add branch selection and shallow clone support
+- [x] Add configurable source extension discovery
+- [x] Add Tree-sitter parser interface
+- [x] Parse Python source into structured AST nodes
+- [x] Return partial ASTs for syntax errors
 - [x] Parse Python files into ASTs
 - [x] Extract functions, classes, methods, and imports
 - [x] Create AST-aware chunks
-- [ ] Add remote Git clone support
 - [ ] Add call extraction inside functions
 - [ ] Add JavaScript/TypeScript parser support
 
