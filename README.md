@@ -17,8 +17,9 @@ Project foundation and the first part of repository ingestion are started:
 - Branch selection and shallow clone support
 - Repository file discovery
 - Tree-sitter Python parsing with partial ASTs for syntax errors
+- Python symbol extraction for functions, classes, methods, and imports
+- Semantic code chunking that respects function/class boundaries
 - Python AST parsing
-- Symbol extraction for functions, classes, methods, and imports
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
 
@@ -108,6 +109,28 @@ python -c "from src.reporag.ingestion.parser import ASTParser; parser = ASTParse
 
 Parser results include `type`, `text`, `start_line`, `end_line`, columns,
 error state, and child nodes for each AST node.
+
+## Symbol Extraction
+
+Extract meaningful Python entities from parsed source:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.ingestion.symbol_extractor import SymbolExtractor; source='import os\n\ndef hello():\n    return 42\n'; parsed=ASTParser().parse(source, language='python'); symbols=SymbolExtractor().extract(parsed, 'example.py'); print([(s.type, s.name, s.start_line, s.end_line) for s in symbols])"
+```
+
+Symbols include names, signatures, docstrings, decorators, line ranges, async
+flags, class bases, method metadata, and import details.
+
+## Code Chunking
+
+Chunk parsed and extracted code at semantic boundaries:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.ingestion.symbol_extractor import SymbolExtractor; from src.reporag.ingestion.chunker import CodeChunker; source='def hello():\n    return 42\n'; parsed=ASTParser().parse(source, language='python'); symbols=SymbolExtractor().extract(parsed, 'example.py'); chunks=CodeChunker(max_tokens=512).chunk(symbols, source, file_path='example.py', language='python'); print([(c.parent_symbol, c.start_line, c.end_line, c.token_count) for c in chunks])"
+```
+
+Large functions are split at blank-line/logical boundaries with the signature
+repeated in continuation chunks. Large classes split by method when needed.
 
 ## Roadmap
 

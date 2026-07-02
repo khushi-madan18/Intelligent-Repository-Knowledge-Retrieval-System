@@ -41,7 +41,9 @@ Status: started
 - [x] Return partial ASTs for syntax errors
 - [x] Parse Python files into ASTs
 - [x] Extract functions, classes, methods, and imports
+- [x] Add symbol metadata: signatures, docstrings, decorators, imports, line ranges
 - [x] Create AST-aware chunks
+- [x] Split oversized functions/classes at semantic boundaries with signature overlap
 - [ ] Add call extraction inside functions
 - [ ] Add JavaScript/TypeScript parser support
 
