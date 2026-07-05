@@ -19,6 +19,8 @@ Project foundation and the first part of repository ingestion are started:
 - Tree-sitter Python parsing with partial ASTs for syntax errors
 - Python symbol extraction for functions, classes, methods, and imports
 - Semantic code chunking that respects function/class boundaries
+- Call graph builder for direct, method, constructor, recursive, and cross-file calls
+- Import dependency graph builder with relative import resolution and cycle detection
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -131,6 +133,29 @@ python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.
 
 Large functions are split at blank-line/logical boundaries with the signature
 repeated in continuation chunks. Large classes split by method when needed.
+
+## Call Graph
+
+Build caller-to-callee edges from parsed files and extracted symbols:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.ingestion.symbol_extractor import SymbolExtractor; from src.reporag.graph.call_graph import CallGraphBuilder, CallGraphInput; source='def outer():\n    return inner()\n\ndef inner():\n    return 42\n'; parsed=ASTParser().parse(source, language='python'); symbols=SymbolExtractor().extract(parsed, 'example.py'); edges=CallGraphBuilder().build([CallGraphInput('example.py', parsed, symbols)]); print([(e.caller, e.callee, e.call_site_line) for e in edges])"
+```
+
+Edges include caller, callee, call-site file and line, call text, and resolved
+target metadata when a symbol can be matched.
+
+## Dependency Graph
+
+Build module-level import dependency edges:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.ingestion.symbol_extractor import SymbolExtractor; from src.reporag.graph.dependency_graph import DependencyGraphBuilder, DependencyGraphInput; source='from app.helpers import normalize\n'; parsed=ASTParser().parse(source, language='python'); symbols=SymbolExtractor().extract(parsed, 'app/service.py'); graph=DependencyGraphBuilder().build([DependencyGraphInput('app/service.py', symbols)]); print([(e.source, e.target, e.imported_names) for e in graph.edges])"
+```
+
+Dependency edges include source module, target module, import type, imported
+names, source/target files when resolved, star-import warnings, and circular
+import chains.
 
 ## Roadmap
 

@@ -49,11 +49,14 @@ Status: started
 
 ## Milestone 3: Knowledge Graph
 
-Status: next
+Status: started
 
 - [ ] Build symbol table across all parsed files
-- [ ] Build import dependency graph
-- [ ] Build function call graph
+- [x] Build import dependency graph
+- [x] Resolve absolute and relative imports
+- [x] Detect circular import chains
+- [x] Build function call graph
+- [x] Resolve direct, method, recursive, and cross-file calls
 - [ ] Add in-memory graph query interface
 
 ## Milestone 4: Retrieval
