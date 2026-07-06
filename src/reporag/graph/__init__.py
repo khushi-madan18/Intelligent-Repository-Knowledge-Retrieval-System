@@ -8,6 +8,18 @@ from reporag.graph.dependency_graph import (
     DependencyGraphBuilder,
     DependencyGraphInput,
 )
+from reporag.graph.neo4j_store import (
+    GraphEdge,
+    GraphNode,
+    Neo4jGraphStore,
+    NetworkXGraphStore,
+)
+from reporag.graph.symbol_table import (
+    SymbolRecord,
+    SymbolTable,
+    SymbolTableBuilder,
+    SymbolTableInput,
+)
 
 __all__ = [
     "CallGraphBuilder",
@@ -18,4 +30,12 @@ __all__ = [
     "DependencyGraph",
     "DependencyGraphBuilder",
     "DependencyGraphInput",
+    "GraphEdge",
+    "GraphNode",
+    "Neo4jGraphStore",
+    "NetworkXGraphStore",
+    "SymbolRecord",
+    "SymbolTable",
+    "SymbolTableBuilder",
+    "SymbolTableInput",
 ]

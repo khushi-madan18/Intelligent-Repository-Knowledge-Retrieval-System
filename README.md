@@ -21,6 +21,8 @@ Project foundation and the first part of repository ingestion are started:
 - Semantic code chunking that respects function/class boundaries
 - Call graph builder for direct, method, constructor, recursive, and cross-file calls
 - Import dependency graph builder with relative import resolution and cycle detection
+- Global symbol table with exact, qualified, regex, and file lookups
+- Neo4j graph store with NetworkX fallback
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -156,6 +158,28 @@ python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.
 Dependency edges include source module, target module, import type, imported
 names, source/target files when resolved, star-import warnings, and circular
 import chains.
+
+## Symbol Table
+
+Build a central symbol registry from extracted file symbols:
+
+```bash
+python -c "from src.reporag.ingestion.parser import ASTParser; from src.reporag.ingestion.symbol_extractor import SymbolExtractor; from src.reporag.graph.symbol_table import SymbolTableBuilder, SymbolTableInput; source='def hello():\n    return 42\n'; parsed=ASTParser().parse(source, language='python'); symbols=SymbolExtractor().extract(parsed, 'example.py'); table=SymbolTableBuilder().build([SymbolTableInput('example.py', symbols)]); print([(r.qualified_name, r.file_path, r.start_line) for r in table.lookup_exact('hello')])"
+```
+
+The table supports exact-name, fully qualified-name, regex, and file-path
+lookup, plus JSON serialization for persistence.
+
+## Graph Store
+
+Store graph nodes and relationships in Neo4j, or use NetworkX locally:
+
+```bash
+python -c "from src.reporag.graph.neo4j_store import GraphNode, NetworkXGraphStore; store=NetworkXGraphStore(); store.create_node(GraphNode('fn:hello', 'Function', {'name': 'hello'})); print(store.query('MATCH (n) RETURN n'))"
+```
+
+Supported node labels are `Module`, `Function`, and `Class`. Supported edge
+types are `CALLS`, `IMPORTS`, `INHERITS`, and `CONTAINS`.
 
 ## Roadmap
 

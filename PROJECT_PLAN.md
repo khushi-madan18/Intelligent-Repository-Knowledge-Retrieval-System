@@ -51,13 +51,17 @@ Status: started
 
 Status: started
 
-- [ ] Build symbol table across all parsed files
+- [x] Build symbol table across all parsed files
+- [x] Add exact, qualified, regex, and file-path symbol lookups
+- [x] Add JSON serialization for symbol registry
 - [x] Build import dependency graph
 - [x] Resolve absolute and relative imports
 - [x] Detect circular import chains
 - [x] Build function call graph
 - [x] Resolve direct, method, recursive, and cross-file calls
-- [ ] Add in-memory graph query interface
+- [x] Add Neo4j graph store wrapper
+- [x] Add NetworkX graph store fallback
+- [x] Add in-memory graph query interface
 
 ## Milestone 4: Retrieval
 
