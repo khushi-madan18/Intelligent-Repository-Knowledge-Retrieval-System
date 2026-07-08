@@ -65,10 +65,18 @@ Status: started
 
 ## Milestone 4: Retrieval
 
-Status: planned
+Status: started
 
-- [ ] Add BM25 keyword retrieval
-- [ ] Add vector embedding interface
+- [x] Add BM25 keyword retrieval
+- [x] Add vector embedding interface
+- [x] Add CodeBERT/UniXcoder embedding backend
+- [x] Add batch embedding with CPU/GPU device support
+- [x] Add L2 normalization and embedding cache
+- [x] Add sentence-transformers document embedding backend
+- [x] Link documentation embeddings to parent symbols
+- [x] Add document embedding progress callbacks
+- [x] Add Qdrant vector collection builder
+- [x] Add hybrid index incremental updates
 - [ ] Add result fusion
 - [ ] Add reranking interface
 

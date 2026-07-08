@@ -29,6 +29,12 @@ dev = [
   "pytest>=8.0",
   "ruff>=0.8",
 ]
+embedding = [
+  "qdrant-client>=1.10",
+  "sentence-transformers>=3.0",
+  "torch>=2.0",
+  "transformers>=4.40",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -23,6 +23,9 @@ Project foundation and the first part of repository ingestion are started:
 - Import dependency graph builder with relative import resolution and cycle detection
 - Global symbol table with exact, qualified, regex, and file lookups
 - Neo4j graph store with NetworkX fallback
+- CodeBERT/UniXcoder embedding pipeline with batching and cache
+- Sentence-transformers doc embedding pipeline for docstrings, comments, and README sections
+- Hybrid Qdrant + BM25 index builder with code-aware tokenization
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -180,6 +183,48 @@ python -c "from src.reporag.graph.neo4j_store import GraphNode, NetworkXGraphSto
 
 Supported node labels are `Module`, `Function`, and `Class`. Supported edge
 types are `CALLS`, `IMPORTS`, `INHERITS`, and `CONTAINS`.
+
+## Code Embeddings
+
+Install the optional embedding dependencies when you want to load CodeBERT or
+UniXcoder from Hugging Face:
+
+```bash
+pip install -e ".[embedding]"
+```
+
+Generate normalized 768-dimensional vectors:
+
+```bash
+python -c "from src.reporag.embedding.code_embedder import CodeEmbedder; embedder=CodeEmbedder(); vector=embedder.embed('def hello():\n    return 42\n'); print(len(vector), embedder.device)"
+```
+
+The embedder batches inputs, uses CUDA when available, falls back to CPU, and
+caches repeated code strings by model name and content hash.
+
+## Document Embeddings
+
+Embed natural-language repository text and keep it linked to the parent symbol:
+
+```bash
+python -c "from src.reporag.embedding.doc_embedder import DocEmbedder; embedder=DocEmbedder(); result=embedder.embed('Return parsed repository files.', parent_symbol_id='symbol:RepoCloner.clone_and_discover'); print(len(result.vector), result.parent_symbol_id)"
+```
+
+`DocEmbedder` supports docstrings, comments, and README sections. Empty
+docstrings return zero vectors without calling the model, and batch embedding
+accepts a progress callback with `(processed, total)`.
+
+## Hybrid Index
+
+Build dense Qdrant points and a sparse BM25 index from code/doc embeddings:
+
+```bash
+python -c "from src.reporag.embedding.index_builder import CodeAwareTokenizer; print(CodeAwareTokenizer().tokenize('parseHTTPResponse user_id'))"
+```
+
+`HybridIndexBuilder` creates the Qdrant collection payload schema, upserts code
+and documentation embeddings with metadata, and keeps a BM25 index updated for
+incremental insert/update/delete operations.
 
 ## Roadmap
 
