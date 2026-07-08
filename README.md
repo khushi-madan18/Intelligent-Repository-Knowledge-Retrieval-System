@@ -26,6 +26,10 @@ Project foundation and the first part of repository ingestion are started:
 - CodeBERT/UniXcoder embedding pipeline with batching and cache
 - Sentence-transformers doc embedding pipeline for docstrings, comments, and README sections
 - Hybrid Qdrant + BM25 index builder with code-aware tokenization
+- Vector semantic search with top-k, filters, and code/doc result merging
+- BM25 sparse search with exact function/class name boosting
+- Graph traversal retrieval for neighbors, paths, and subgraphs
+- Reciprocal Rank Fusion and cross-encoder reranking
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -225,6 +229,54 @@ python -c "from src.reporag.embedding.index_builder import CodeAwareTokenizer; p
 `HybridIndexBuilder` creates the Qdrant collection payload schema, upserts code
 and documentation embeddings with metadata, and keeps a BM25 index updated for
 incremental insert/update/delete operations.
+
+## Vector Search
+
+Search code and documentation vector collections, merge the results, and keep
+file/line/symbol payloads attached:
+
+```bash
+python -c "from src.reporag.retrieval.vector_search import InMemoryVectorSearchBackend, VectorSearcher\nclass Embedder:\n    def embed(self, text): return [1.0, 0.0]\nsearcher=VectorSearcher(query_embedder=Embedder(), backend=InMemoryVectorSearchBackend()); print(searcher.search('auth flow', top_k=5).results)"
+```
+
+`VectorSearcher` supports configurable `top_k`, language/file/symbol-type
+filters, code-only or docs-only search, and a Qdrant backend for production.
+
+## BM25 Search
+
+Search exact code identifiers with the same result schema as vector search:
+
+```bash
+python -c "from src.reporag.embedding.index_builder import BM25Index; from src.reporag.retrieval.bm25_search import BM25Searcher; searcher=BM25Searcher(BM25Index()); print(searcher.tokenize_query('authenticate_user'))"
+```
+
+`BM25Searcher` uses the code-aware tokenizer from indexing, returns top-k BM25
+matches, and boosts exact function/class name matches so defining symbols rank
+above looser keyword matches.
+
+## Graph Retrieval
+
+Traverse the code knowledge graph for structural context:
+
+```bash
+python -c "from src.reporag.graph.neo4j_store import NetworkXGraphStore; from src.reporag.retrieval.graph_traversal import GraphTraversalRetriever; retriever=GraphTraversalRetriever(NetworkXGraphStore()); print(retriever.neighbors('symbol:example', hops=1).results)"
+```
+
+`GraphTraversalRetriever` supports N-hop neighbors, shortest paths between
+symbols, subgraph extraction around symbol sets, and a NetworkX fallback for
+local tests.
+
+## Fusion and Reranking
+
+Fuse vector, BM25, and graph ranked lists, then rerank final candidates:
+
+```bash
+python -c "from src.reporag.retrieval.fusion import ReciprocalRankFusion; print(ReciprocalRankFusion(k=60).fuse([], top_k=5))"
+```
+
+`ReciprocalRankFusion` handles items missing from some sources, tracks source
+ranks/scores, and `CrossEncoderReranker` scores `(query, chunk)` pairs for the
+final top-k order.
 
 ## Roadmap
 

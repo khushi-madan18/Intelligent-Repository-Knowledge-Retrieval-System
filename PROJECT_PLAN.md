@@ -77,8 +77,13 @@ Status: started
 - [x] Add document embedding progress callbacks
 - [x] Add Qdrant vector collection builder
 - [x] Add hybrid index incremental updates
-- [ ] Add result fusion
-- [ ] Add reranking interface
+- [x] Add vector semantic search over code and docs
+- [x] Add retrieval filters for language, file, and symbol type
+- [x] Add BM25 search with exact identifier boosting
+- [x] Add graph neighbor traversal
+- [x] Add shortest path and subgraph retrieval
+- [x] Add result fusion
+- [x] Add reranking interface
 
 ## Milestone 5: API and UI
 
