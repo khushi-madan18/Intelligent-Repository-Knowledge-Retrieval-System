@@ -33,6 +33,8 @@ Project foundation and the first part of repository ingestion are started:
 - Query classifier for simple lookup, multi-hop, and exploratory questions
 - Query decomposer with ordered sub-queries and dependency edges
 - Strategy router and dependency-aware sub-query executor
+- Context assembler for ordered, deduplicated, line-numbered prompt context
+- Code-aware prompt builder with cited answer templates
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -295,6 +297,31 @@ confidence scores from 0 to 1, and low-confidence fallback to `multi-hop`.
 dependency edges and repository context.
 `StrategyRouter` sends sub-queries to BM25, graph, vector, or hybrid retrieval,
 and `SubQueryExecutor` runs them in dependency order while forwarding context.
+
+## Context Assembly
+
+Prepare retrieved chunks for answer generation:
+
+```bash
+python -c "from src.reporag.generation.context_assembler import ContextAssembler; print(ContextAssembler(max_tokens=1000).assemble([]).text)"
+```
+
+`ContextAssembler` orders chunks by file and line, merges overlapping ranges,
+formats file headers with line-numbered code, and truncates to a token budget
+while preserving higher-ranked chunks first.
+
+## Prompt Building
+
+Build code-aware prompts from assembled context:
+
+```bash
+python -c "from src.reporag.generation.context_assembler import AssembledContext; from src.reporag.generation.prompt_builder import PromptBuilder; context=AssembledContext(text='### app.py:1-2\n1: def hello():\n2:     return 42', chunks=[], token_count=7, truncated=False); prompt=PromptBuilder().build('Where is hello defined?', query_type='simple-lookup', context=context); print(prompt.text)"
+```
+
+`PromptBuilder` provides templates for `simple-lookup`, `multi-hop`, and
+`exploratory` questions, includes the required
+`[file_path:start_line-end_line]` citation format, adds few-shot cited answer
+examples, and trims retrieved context to fit the configured model budget.
 
 ## Roadmap
 

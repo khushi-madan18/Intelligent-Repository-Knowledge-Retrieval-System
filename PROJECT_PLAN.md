@@ -98,6 +98,18 @@ Status: started
 - [x] Add retrieval strategy planner
 - [x] Add dependency-aware sub-query executor
 
+## Milestone 4.75: Answer Context Assembly
+
+Status: started
+
+- [x] Add context assembler for retrieved chunks
+- [x] Add overlap deduplication and line-numbered formatting
+- [x] Add context-window truncation with priority ranking
+- [x] Add code-aware prompt templates by query type
+- [x] Add citation instructions and few-shot cited examples
+- [x] Add prompt context-window budgeting
+- [ ] Add answer generator with citations
+
 ## Milestone 5: API and UI
 
 Status: planned
