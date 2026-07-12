@@ -30,6 +30,9 @@ Project foundation and the first part of repository ingestion are started:
 - BM25 sparse search with exact function/class name boosting
 - Graph traversal retrieval for neighbors, paths, and subgraphs
 - Reciprocal Rank Fusion and cross-encoder reranking
+- Query classifier for simple lookup, multi-hop, and exploratory questions
+- Query decomposer with ordered sub-queries and dependency edges
+- Strategy router and dependency-aware sub-query executor
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -277,6 +280,21 @@ python -c "from src.reporag.retrieval.fusion import ReciprocalRankFusion; print(
 `ReciprocalRankFusion` handles items missing from some sources, tracks source
 ranks/scores, and `CrossEncoderReranker` scores `(query, chunk)` pairs for the
 final top-k order.
+
+## Query Planning
+
+Classify user questions before choosing the retrieval path:
+
+```bash
+python -c "from src.reporag.agent.planner import QueryClassifier; result=QueryClassifier().classify('How does login flow from API route to database?'); print(result.category, result.confidence)"
+```
+
+`QueryClassifier` supports LLM-style JSON classification with few-shot examples,
+confidence scores from 0 to 1, and low-confidence fallback to `multi-hop`.
+`QueryDecomposer` breaks multi-hop questions into 2-5 ordered sub-queries with
+dependency edges and repository context.
+`StrategyRouter` sends sub-queries to BM25, graph, vector, or hybrid retrieval,
+and `SubQueryExecutor` runs them in dependency order while forwarding context.
 
 ## Roadmap
 

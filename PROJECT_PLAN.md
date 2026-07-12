@@ -85,6 +85,19 @@ Status: started
 - [x] Add result fusion
 - [x] Add reranking interface
 
+## Milestone 4.5: Agentic Query Planning
+
+Status: started
+
+- [x] Add query classifier for simple lookup, multi-hop, and exploratory queries
+- [x] Add confidence scores and low-confidence fallback
+- [x] Add few-shot LLM classifier prompt
+- [x] Add multi-hop query decomposer
+- [x] Add ordered sub-queries with dependency edges
+- [x] Add LangGraph-compatible decomposition state machine
+- [x] Add retrieval strategy planner
+- [x] Add dependency-aware sub-query executor
+
 ## Milestone 5: API and UI
 
 Status: planned

@@ -23,6 +23,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+agent = [
+  "langgraph>=0.2",
+  "openai>=1.0",
+]
 dev = [
   "black>=24.0",
   "pre-commit>=4.0",
