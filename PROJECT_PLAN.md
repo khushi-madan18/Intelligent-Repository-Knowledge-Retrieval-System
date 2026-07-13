@@ -108,13 +108,19 @@ Status: started
 - [x] Add code-aware prompt templates by query type
 - [x] Add citation instructions and few-shot cited examples
 - [x] Add prompt context-window budgeting
-- [ ] Add answer generator with citations
+- [x] Add answer generator with citations
+- [x] Add citation extraction and validation
+- [x] Add configurable OpenAI/Anthropic generation clients
+- [x] Add graceful LLM error handling
 
 ## Milestone 5: API and UI
 
-Status: planned
+Status: started
 
-- [ ] Add FastAPI endpoints
-- [ ] Add query endpoint with citations
+- [x] Add FastAPI endpoints
+- [x] Add query endpoint with citations
+- [x] Add repository ingestion and listing endpoints
+- [x] Add health endpoint with component status
+- [x] Add OpenAPI docs route
 - [ ] Add repository explorer UI
 - [ ] Add Q&A interface

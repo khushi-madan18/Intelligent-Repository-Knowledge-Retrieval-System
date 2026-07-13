@@ -35,6 +35,8 @@ Project foundation and the first part of repository ingestion are started:
 - Strategy router and dependency-aware sub-query executor
 - Context assembler for ordered, deduplicated, line-numbered prompt context
 - Code-aware prompt builder with cited answer templates
+- LLM answer generator with line-level citation extraction and validation
+- FastAPI app with repository ingestion, query, health, and OpenAPI docs
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -322,6 +324,38 @@ python -c "from src.reporag.generation.context_assembler import AssembledContext
 `exploratory` questions, includes the required
 `[file_path:start_line-end_line]` citation format, adds few-shot cited answer
 examples, and trims retrieved context to fit the configured model budget.
+
+## Answer Generation
+
+Generate cited answers and validate citation markers against retrieved context:
+
+```bash
+python -c "from src.reporag.generation.citation import extract_citations; print(extract_citations('Defined here [src/app.py:1-2]'))"
+```
+
+`AnswerGenerator` calls a configurable OpenAI or Anthropic client, extracts
+`[file_path:start_line-end_line]` markers, validates them against assembled
+context ranges, returns structured `answer` and `citations`, and reports LLM
+provider errors without crashing the pipeline.
+
+## API
+
+Run the FastAPI application locally:
+
+```bash
+uvicorn src.reporag.api.main:app --reload
+```
+
+Available endpoints:
+
+- `GET /api/v1/health`
+- `POST /api/v1/repos/ingest`
+- `GET /api/v1/repos`
+- `POST /api/v1/query`
+- `GET /docs`
+
+Requests and responses are validated with Pydantic models. The query endpoint
+returns structured `answer`, `citations`, and `metadata` fields.
 
 ## Roadmap
 
