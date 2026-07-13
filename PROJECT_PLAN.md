@@ -122,5 +122,11 @@ Status: started
 - [x] Add repository ingestion and listing endpoints
 - [x] Add health endpoint with component status
 - [x] Add OpenAPI docs route
+- [x] Add Google OAuth redirect and callback endpoints
+- [x] Add Google user upsert
+- [x] Add JWT access and refresh token helpers
+- [x] Add bearer token verification dependency
+- [x] Add refresh endpoint
+- [x] Add current-user dependency injection
 - [ ] Add repository explorer UI
 - [ ] Add Q&A interface

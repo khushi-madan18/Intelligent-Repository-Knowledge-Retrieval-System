@@ -82,6 +82,10 @@ def test_openapi_docs_are_available() -> None:
     schema = app.openapi()
 
     assert app.docs_url == "/docs"
+    assert "/auth/google" in schema["paths"]
+    assert "/auth/google/callback" in schema["paths"]
+    assert "/auth/refresh" in schema["paths"]
+    assert "/auth/me" in schema["paths"]
     assert "/api/v1/health" in schema["paths"]
     assert "/api/v1/repos/ingest" in schema["paths"]
     assert "/api/v1/query" in schema["paths"]

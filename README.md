@@ -37,6 +37,7 @@ Project foundation and the first part of repository ingestion are started:
 - Code-aware prompt builder with cited answer templates
 - LLM answer generator with line-level citation extraction and validation
 - FastAPI app with repository ingestion, query, health, and OpenAPI docs
+- Google OAuth login flow with JWT access and refresh tokens
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -348,6 +349,10 @@ uvicorn src.reporag.api.main:app --reload
 
 Available endpoints:
 
+- `GET /auth/google`
+- `GET /auth/google/callback`
+- `POST /auth/refresh`
+- `GET /auth/me`
 - `GET /api/v1/health`
 - `POST /api/v1/repos/ingest`
 - `GET /api/v1/repos`
@@ -356,6 +361,10 @@ Available endpoints:
 
 Requests and responses are validated with Pydantic models. The query endpoint
 returns structured `answer`, `citations`, and `metadata` fields.
+The auth endpoints redirect to Google OAuth, exchange callback codes, upsert
+the local user record, and return JWT access and refresh tokens. JWTs include
+`user_id`, `email`, `roles`, `iat`, and `exp`; protected routes can use the
+`get_current_user` dependency to validate bearer tokens.
 
 ## Roadmap
 
