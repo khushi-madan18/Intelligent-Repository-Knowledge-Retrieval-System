@@ -38,6 +38,8 @@ Project foundation and the first part of repository ingestion are started:
 - LLM answer generator with line-level citation extraction and validation
 - FastAPI app with repository ingestion, query, health, and OpenAPI docs
 - Google OAuth login flow with JWT access and refresh tokens
+- API middleware for rate limiting, request IDs, JSON logs, and clean errors
+- React + Vite frontend scaffold with routing and protected auth flow
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -365,6 +367,24 @@ The auth endpoints redirect to Google OAuth, exchange callback codes, upsert
 the local user record, and return JWT access and refresh tokens. JWTs include
 `user_id`, `email`, `roles`, `iat`, and `exp`; protected routes can use the
 `get_current_user` dependency to validate bearer tokens.
+API middleware adds per-user rate limiting, `X-Request-ID` response headers,
+structured JSON request logs, and consistent error responses without stack
+traces.
+
+## Frontend
+
+Run the React app locally:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend uses React 18, Vite, TailwindCSS, and React Router. Routes include
+`/`, `/login`, `/repos`, `/repos/:id`, and `/query`. Google login redirects to
+the backend OAuth route, JWTs are held in memory, and protected routes send
+unauthenticated users back to `/login`.
 
 ## Roadmap
 

@@ -22,6 +22,8 @@ done < <(
     -not -path './.git/*' \
     -not -path './.venv/*' \
     -not -path './.cache/*' \
+    -not -path './frontend/node_modules/*' \
+    -not -path './frontend/dist/*' \
     -not -path '*/__pycache__/*' \
     -not -path './.pytest_cache/*' \
     -print0

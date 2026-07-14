@@ -128,5 +128,13 @@ Status: started
 - [x] Add bearer token verification dependency
 - [x] Add refresh endpoint
 - [x] Add current-user dependency injection
-- [ ] Add repository explorer UI
-- [ ] Add Q&A interface
+- [x] Add per-user rate limiting middleware
+- [x] Add request ID middleware
+- [x] Add structured JSON request logging
+- [x] Add consistent API error responses
+- [x] Add React + Vite frontend scaffold
+- [x] Add frontend routing for dashboard, login, repos, repo detail, and query
+- [x] Add frontend auth context and protected routes
+- [x] Add Google login redirect from frontend
+- [ ] Build full repository explorer UI
+- [ ] Build full Q&A interface

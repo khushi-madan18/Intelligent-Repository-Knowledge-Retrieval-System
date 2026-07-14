@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     app_name: str = "Intelligent Repository Knowledge Retrieval System"
     api_v1_prefix: str = "/api/v1"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    api_rate_limit_per_minute: int = Field(default=60, ge=1)
 
     # Repository ingestion
     max_repo_size_mb: int = Field(default=100, ge=1)
