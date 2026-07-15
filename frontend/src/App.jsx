@@ -4,8 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
-import Query from "./pages/Query.jsx";
-import RepoDetail from "./pages/RepoDetail.jsx";
+import QueryInterface from "./pages/QueryInterface.jsx";
+import RepoExplorer from "./pages/RepoExplorer.jsx";
 import Repos from "./pages/Repos.jsx";
 
 function AppShell() {
@@ -43,8 +43,8 @@ function AppShell() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/repos" element={<Repos />} />
-            <Route path="/repos/:id" element={<RepoDetail />} />
-            <Route path="/query" element={<Query />} />
+            <Route path="/repos/:id" element={<RepoExplorer />} />
+            <Route path="/query" element={<QueryInterface />} />
           </Route>
         </Routes>
       </main>

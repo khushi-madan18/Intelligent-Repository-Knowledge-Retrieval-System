@@ -40,6 +40,8 @@ Project foundation and the first part of repository ingestion are started:
 - Google OAuth login flow with JWT access and refresh tokens
 - API middleware for rate limiting, request IDs, JSON logs, and clean errors
 - React + Vite frontend scaffold with routing and protected auth flow
+- Repository explorer UI with collapsible file tree and highlighted code viewer
+- Conversational Q&A UI with clickable citations that jump to highlighted code
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository
@@ -385,6 +387,8 @@ The frontend uses React 18, Vite, TailwindCSS, and React Router. Routes include
 `/`, `/login`, `/repos`, `/repos/:id`, and `/query`. Google login redirects to
 the backend OAuth route, JWTs are held in memory, and protected routes send
 unauthenticated users back to `/login`.
+The repository detail route renders a collapsible file tree, syntax-highlighted
+Python/JS/TS code with line numbers, and citation-style line range highlighting.
 
 ## Roadmap
 

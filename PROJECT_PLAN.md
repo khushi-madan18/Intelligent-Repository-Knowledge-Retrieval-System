@@ -136,5 +136,10 @@ Status: started
 - [x] Add frontend routing for dashboard, login, repos, repo detail, and query
 - [x] Add frontend auth context and protected routes
 - [x] Add Google login redirect from frontend
-- [ ] Build full repository explorer UI
-- [ ] Build full Q&A interface
+- [x] Build repository explorer file tree
+- [x] Build syntax-highlighted code viewer with line numbers
+- [x] Add citation-style line range highlighting
+- [x] Fetch repository file tree and file content from API
+- [x] Build full Q&A interface
+- [x] Add clickable answer citations that navigate to highlighted code
+- [x] Add query loading state and session history
