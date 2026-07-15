@@ -42,6 +42,7 @@ Project foundation and the first part of repository ingestion are started:
 - React + Vite frontend scaffold with routing and protected auth flow
 - Repository explorer UI with collapsible file tree and highlighted code viewer
 - Conversational Q&A UI with clickable citations that jump to highlighted code
+- Interactive call/dependency graph visualizer with filters, search, and code navigation
 - Python AST parsing
 - AST-aware chunks that keep functions/classes together
 - Unit tests and sample repository

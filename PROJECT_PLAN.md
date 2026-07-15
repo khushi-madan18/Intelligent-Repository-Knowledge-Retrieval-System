@@ -143,3 +143,5 @@ Status: started
 - [x] Build full Q&A interface
 - [x] Add clickable answer citations that navigate to highlighted code
 - [x] Add query loading state and session history
+- [x] Add interactive call/dependency graph visualizer
+- [x] Add graph node details, zoom/pan, module filters, and search

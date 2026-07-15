@@ -37,6 +37,8 @@ def test_frontend_required_files_exist() -> None:
         "src/components/QueryInput.jsx",
         "src/components/AnswerDisplay.jsx",
         "src/components/CitationLink.jsx",
+        "src/components/GraphVisualizer.jsx",
+        "src/components/RepoSelector.jsx",
         "src/context/AuthContext.jsx",
     ]
 
@@ -95,6 +97,8 @@ def test_repository_explorer_supports_tree_code_and_line_highlighting() -> None:
     assert "python" in code_viewer
     assert "javascript" in code_viewer
     assert "typescript" in code_viewer
+    assert "GraphVisualizer" in explorer
+    assert "RepoSelector" in explorer
 
 
 def test_query_interface_supports_chat_citations_and_history() -> None:
@@ -116,3 +120,27 @@ def test_query_interface_supports_chat_citations_and_history() -> None:
     assert "file: parsed.filePath" in citation_link
     assert "lines: `${parsed.startLine}-${parsed.endLine}`" in citation_link
     assert "to={`/repos/${repositoryId}?${search.toString()}`}" in citation_link
+
+
+def test_graph_visualizer_supports_types_filters_search_and_navigation() -> None:
+    graph_visualizer = read("src/components/GraphVisualizer.jsx")
+    repo_selector = read("src/components/RepoSelector.jsx")
+
+    assert "createForceLayout" in graph_visualizer
+    assert (
+        "apiFetch(`/api/v1/repos/${repositoryId}/graph?type=${graphType}`)"
+        in graph_visualizer
+    )
+    assert "function" in graph_visualizer
+    assert "class" in graph_visualizer
+    assert "module" in graph_visualizer
+    assert "calls" in graph_visualizer
+    assert "imports" in graph_visualizer
+    assert "inherits" in graph_visualizer
+    assert "moduleFilter" in graph_visualizer
+    assert "isHighlighted(node, search)" in graph_visualizer
+    assert "setSelectedNode(node)" in graph_visualizer
+    assert "onWheel={wheelZoom}" in graph_visualizer
+    assert "nodeCodeUrl(repositoryId, selected)" in graph_visualizer
+    assert 'apiFetch("/api/v1/repos")' in repo_selector
+    assert "onSelect(event.target.value)" in repo_selector

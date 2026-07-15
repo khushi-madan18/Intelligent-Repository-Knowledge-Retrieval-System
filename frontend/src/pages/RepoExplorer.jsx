@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import CodeViewer from "../components/CodeViewer.jsx";
 import FileTree from "../components/FileTree.jsx";
+import GraphVisualizer from "../components/GraphVisualizer.jsx";
+import RepoSelector from "../components/RepoSelector.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const SAMPLE_FILES = [
@@ -28,8 +30,10 @@ const SAMPLE_FILES = [
 
 export default function RepoExplorer() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { apiFetch } = useAuth();
+  const [view, setView] = useState(searchParams.get("view") || "files");
   const [files, setFiles] = useState(SAMPLE_FILES);
   const [selectedPath, setSelectedPath] = useState(
     searchParams.get("file") || SAMPLE_FILES[0].path,
@@ -106,6 +110,15 @@ export default function RepoExplorer() {
     setHighlightRange(range);
   }
 
+  function updateView(nextView) {
+    setView(nextView);
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      next.set("view", nextView);
+      return next;
+    });
+  }
+
   return (
     <section>
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -120,27 +133,55 @@ export default function RepoExplorer() {
             ranges for citation cross-references.
           </p>
         </div>
-        <span className="badge self-start md:self-auto">
-          {status === "live" ? "API data" : "Sample data"}
-        </span>
+        <div className="flex flex-col items-start gap-3 md:items-end">
+          <RepoSelector
+            apiFetch={apiFetch}
+            currentRepoId={id}
+            onSelect={(repoId) => navigate(`/repos/${repoId}`)}
+          />
+          <span className="badge self-start md:self-auto">
+            {status === "live" ? "API data" : "Sample data"}
+          </span>
+        </div>
       </div>
 
       {error ? <p className="mt-4 text-sm text-accent">{error}</p> : null}
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[18rem_1fr]">
-        <FileTree
-          files={files}
-          onSelect={selectFile}
-          selectedPath={selectedPath}
-        />
-        <CodeViewer
-          code={selectedContent}
-          filePath={selectedPath}
-          highlightRange={highlightRange}
-          language={language}
-          onHighlightRangeChange={updateHighlightRange}
-        />
+      <div className="mt-6 flex gap-2">
+        <button
+          className={view === "files" ? "btn-primary" : "btn-secondary"}
+          onClick={() => updateView("files")}
+          type="button"
+        >
+          Files
+        </button>
+        <button
+          className={view === "graph" ? "btn-primary" : "btn-secondary"}
+          onClick={() => updateView("graph")}
+          type="button"
+        >
+          Graph
+        </button>
       </div>
+
+      {view === "graph" ? (
+        <GraphVisualizer apiFetch={apiFetch} repositoryId={id} />
+      ) : (
+        <div className="mt-6 grid gap-5 lg:grid-cols-[18rem_1fr]">
+          <FileTree
+            files={files}
+            onSelect={selectFile}
+            selectedPath={selectedPath}
+          />
+          <CodeViewer
+            code={selectedContent}
+            filePath={selectedPath}
+            highlightRange={highlightRange}
+            language={language}
+            onHighlightRangeChange={updateHighlightRange}
+          />
+        </div>
+      )}
     </section>
   );
 }
