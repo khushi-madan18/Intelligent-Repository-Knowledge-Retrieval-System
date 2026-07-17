@@ -84,6 +84,8 @@ Status: started
 - [x] Add shortest path and subgraph retrieval
 - [x] Add result fusion
 - [x] Add reranking interface
+- [x] Add retrieval evaluation metrics: context recall, precision, MRR, NDCG
+- [x] Add evaluation dataset and batch strategy comparison runner
 
 ## Milestone 4.5: Agentic Query Planning
 
@@ -112,6 +114,8 @@ Status: started
 - [x] Add citation extraction and validation
 - [x] Add configurable OpenAI/Anthropic generation clients
 - [x] Add graceful LLM error handling
+- [x] Add generation evaluation for faithfulness and relevance
+- [x] Add hallucination flags and citation coverage metric
 
 ## Milestone 5: API and UI
 

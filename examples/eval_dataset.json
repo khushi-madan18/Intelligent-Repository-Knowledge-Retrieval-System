@@ -1,0 +1,124 @@
+{
+  "queries": [
+    {
+      "query": "Where is the repository cloning logic implemented?",
+      "relevant_chunks": ["chunk:ingestion/cloner.py:RepoCloner", "chunk:ingestion/cloner.py:clone_and_discover"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How does shallow cloning choose a branch?",
+      "relevant_chunks": ["chunk:ingestion/cloner.py:clone_and_discover", "chunk:ingestion/cloner.py:_clone_remote"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "Which code parses Python source into AST nodes?",
+      "relevant_chunks": ["chunk:ingestion/parser.py:ASTParser", "chunk:ingestion/parser.py:parse"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are Python functions and classes extracted?",
+      "relevant_chunks": ["chunk:ingestion/symbol_extractor.py:SymbolExtractor", "chunk:ingestion/symbol_extractor.py:extract"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How does semantic chunking avoid splitting functions?",
+      "relevant_chunks": ["chunk:ingestion/chunker.py:CodeChunker", "chunk:ingestion/chunker.py:chunk"],
+      "metadata": {"category": "exploratory"}
+    },
+    {
+      "query": "Where is the function call graph built?",
+      "relevant_chunks": ["chunk:graph/call_graph.py:CallGraphBuilder", "chunk:graph/call_graph.py:build"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are import cycles detected?",
+      "relevant_chunks": ["chunk:graph/dependency_graph.py:DependencyGraphBuilder", "chunk:graph/dependency_graph.py:_detect_cycles"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "Where can I lookup symbols by qualified name?",
+      "relevant_chunks": ["chunk:graph/symbol_table.py:SymbolTable", "chunk:graph/symbol_table.py:lookup_qualified"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are graph nodes persisted to Neo4j?",
+      "relevant_chunks": ["chunk:graph/neo4j_store.py:Neo4jGraphStore", "chunk:graph/neo4j_store.py:create_node"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "Where is the NetworkX graph fallback?",
+      "relevant_chunks": ["chunk:graph/neo4j_store.py:NetworkXGraphStore", "chunk:retrieval/graph_traversal.py:GraphTraversalRetriever"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are CodeBERT embeddings cached?",
+      "relevant_chunks": ["chunk:embedding/code_embedder.py:CodeEmbedder", "chunk:embedding/code_embedder.py:embed_batch"],
+      "metadata": {"category": "exploratory"}
+    },
+    {
+      "query": "Where are docstrings embedded for natural language search?",
+      "relevant_chunks": ["chunk:embedding/doc_embedder.py:DocEmbedder", "chunk:embedding/doc_embedder.py:embed_documents"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How is the hybrid Qdrant and BM25 index built?",
+      "relevant_chunks": ["chunk:embedding/index_builder.py:HybridIndexBuilder", "chunk:embedding/index_builder.py:BM25Index"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "Where does vector search merge code and doc results?",
+      "relevant_chunks": ["chunk:retrieval/vector_search.py:VectorSearcher", "chunk:retrieval/vector_search.py:search"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are exact identifier matches boosted?",
+      "relevant_chunks": ["chunk:retrieval/bm25_search.py:BM25Searcher", "chunk:retrieval/bm25_search.py:_is_exact_name_match"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How does graph retrieval find neighbors and paths?",
+      "relevant_chunks": ["chunk:retrieval/graph_traversal.py:neighbors", "chunk:retrieval/graph_traversal.py:shortest_path"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "Where is reciprocal rank fusion implemented?",
+      "relevant_chunks": ["chunk:retrieval/fusion.py:ReciprocalRankFusion", "chunk:retrieval/fusion.py:fuse"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How does the reranker score query and chunk pairs?",
+      "relevant_chunks": ["chunk:retrieval/reranker.py:CrossEncoderReranker", "chunk:retrieval/reranker.py:rerank"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How is query classification handled?",
+      "relevant_chunks": ["chunk:agent/planner.py:QueryClassifier", "chunk:agent/planner.py:classify"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "Where are multi-hop sub-queries decomposed?",
+      "relevant_chunks": ["chunk:agent/planner.py:QueryDecomposer", "chunk:agent/planner.py:decompose"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "How are retrieval strategies routed?",
+      "relevant_chunks": ["chunk:agent/router.py:StrategyRouter", "chunk:agent/executor.py:SubQueryExecutor"],
+      "metadata": {"category": "multi-hop"}
+    },
+    {
+      "query": "Where is prompt context assembled with line numbers?",
+      "relevant_chunks": ["chunk:generation/context_assembler.py:ContextAssembler", "chunk:generation/context_assembler.py:assemble"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are code-aware prompts built?",
+      "relevant_chunks": ["chunk:generation/prompt_builder.py:PromptBuilder", "chunk:generation/prompt_builder.py:build"],
+      "metadata": {"category": "simple-lookup"}
+    },
+    {
+      "query": "How are line-level citations validated?",
+      "relevant_chunks": ["chunk:generation/citation.py:CitationValidator", "chunk:generation/generator.py:AnswerGenerator"],
+      "metadata": {"category": "multi-hop"}
+    }
+  ]
+}

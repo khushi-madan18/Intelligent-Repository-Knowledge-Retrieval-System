@@ -30,12 +30,14 @@ Project foundation and the first part of repository ingestion are started:
 - BM25 sparse search with exact function/class name boosting
 - Graph traversal retrieval for neighbors, paths, and subgraphs
 - Reciprocal Rank Fusion and cross-encoder reranking
+- Retrieval evaluation suite with recall, precision, MRR, and NDCG
 - Query classifier for simple lookup, multi-hop, and exploratory questions
 - Query decomposer with ordered sub-queries and dependency edges
 - Strategy router and dependency-aware sub-query executor
 - Context assembler for ordered, deduplicated, line-numbered prompt context
 - Code-aware prompt builder with cited answer templates
 - LLM answer generator with line-level citation extraction and validation
+- Generation evaluation for faithfulness, relevance, hallucination, and citations
 - FastAPI app with repository ingestion, query, health, and OpenAPI docs
 - Google OAuth login flow with JWT access and refresh tokens
 - API middleware for rate limiting, request IDs, JSON logs, and clean errors
@@ -279,6 +281,18 @@ python -c "from src.reporag.graph.neo4j_store import NetworkXGraphStore; from sr
 symbols, subgraph extraction around symbol sets, and a NetworkX fallback for
 local tests.
 
+## Retrieval Evaluation
+
+Evaluate retrieval strategies against query-relevance pairs:
+
+```bash
+python -c "from src.reporag.evaluation.retrieval_eval import RetrievalEvaluator; evaluator=RetrievalEvaluator.from_json('examples/eval_dataset.json', k=5); report=evaluator.evaluate(lambda query, top_k: [], strategy_name='empty'); print(report.aggregate)"
+```
+
+The evaluation suite computes context recall@k, precision@k, MRR, and NDCG@k,
+supports per-query and aggregate reporting, loads JSON datasets, and compares
+multiple retrieval strategies with aggregate metric deltas.
+
 ## Fusion and Reranking
 
 Fuse vector, BM25, and graph ranked lists, then rerank final candidates:
@@ -343,6 +357,19 @@ python -c "from src.reporag.generation.citation import extract_citations; print(
 `[file_path:start_line-end_line]` markers, validates them against assembled
 context ranges, returns structured `answer` and `citations`, and reports LLM
 provider errors without crashing the pipeline.
+
+## Generation Evaluation
+
+Evaluate generated answers for grounding and relevance:
+
+```bash
+python -c "from src.reporag.evaluation.generation_eval import GenerationEvaluator; from src.reporag.generation.context_assembler import AssembledContext; context=AssembledContext(text='### app.py:1-1\n1: def hello(): pass', chunks=[], token_count=4, truncated=False); result=GenerationEvaluator(judge_model='judge-small').evaluate(query='Where is hello?', answer='It is in app.py [app.py:1-1].', context=context); print(result.faithfulness, result.answer_relevance, result.citation_coverage)"
+```
+
+`GenerationEvaluator` supports a configurable LLM judge model/client,
+faithfulness and answer-relevance scores from 0 to 1, unsupported-claim
+hallucination flags, and citation coverage using the same line-level citation
+validation as answer generation.
 
 ## API
 
